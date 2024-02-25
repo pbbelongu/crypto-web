@@ -29,28 +29,28 @@ const websocketStreamClient = new WebsocketStream({
   }
 });
 
-// 启动WebSocket客户端
+// 啟動WebSocket客戶端
 websocketStreamClient.ticker('btcusdt');
 websocketStreamClient.ticker('ethusdt'); 
 websocketStreamClient.ticker('solusdt');
 websocketStreamClient.ticker('bnbusdt');
 websocketStreamClient.ticker('dotusdt');
 
-// 启动服务器
+// 啟動服務器
 const server = app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-// 设置Socket.IO
+// 設置Socket.IO
 const io = require('socket.io')(server);
 
-// 监听客户端连接事件
+// 監聽客戶端連接事件
 io.on('connection', (socket) => {
   console.log('A client connected');
 });
 
-// 关闭WebSocket客户端
+// 關閉WebSocket客戶端
 setTimeout(() => {
   websocketStreamClient.disconnect();
   server.close();
-}, 60000); // 关闭WebSocket客户端和服务器
+}, 60000); //關閉WebSocket客戶端和服務器

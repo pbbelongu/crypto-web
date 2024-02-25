@@ -11,22 +11,27 @@
     <h1>Binance Price Updates</h1>
     <div class="price-item">
       <img src="/images/btc.png" alt="BTC Icon">
+      <p class="cryptoName">BTC/USDT</p>
       <div id="btcusdtPrice" class="price"></div> 
     </div>
     <div class="price-item">
       <img src="/images/eth.png" alt="ETH Icon">
+      <p class="cryptoName">ETH/USDT</p>
       <div id="ethusdtPrice"class="price"></div> 
     </div> 
     <div class="price-item">
       <img src="/images/sol.png" alt="SOL Icon">
+      <p class="cryptoName">SOL/USDT</p>
       <div id="solusdtPrice"class="price"></div> 
     </div> 
     <div class="price-item">
       <img src="/images/bnb.png" alt="BNB Icon">
+      <p class="cryptoName">BNB/USDT</p>
       <div id="bnbusdtPrice"class="price"></div> 
     </div> 
     <div class="price-item">
       <img src="/images/dot.png" alt="DOT Icon">
+      <p class="cryptoName">DOT/USDT</p>
       <div id="dotusdtPrice"class="price"></div> 
     </div>
   </div>
@@ -42,31 +47,31 @@
       // 顯示 BTC/USDT 的價格
       const btcusdtPriceElement = document.getElementById('btcusdtPrice');
       socket.on('btcusdtPriceUpdate', function(price) {
-        btcusdtPriceElement.innerText = `BTC/USDT Latest Price: $${formatPrice(price)}`;
+        btcusdtPriceElement.innerText = `$${formatPrice(price)}`;
       });
 
       // 顯示 ETH/USDT 的價格
       const ethusdtPriceElement = document.getElementById('ethusdtPrice');
       socket.on('ethusdtPriceUpdate', function(price) {
-        ethusdtPriceElement.innerText = `ETH/USDT Latest Price: $${price}`;
+        ethusdtPriceElement.innerText = `$${formatPrice(price)}`;
       });
 
       // 顯示 SOL/USDT 的價格
       const solusdtPriceElement = document.getElementById('solusdtPrice');
       socket.on('solusdtPriceUpdate', function(price) {
-        solusdtPriceElement.innerText = `SOL/USDT Latest Price: $${price}`;
+        solusdtPriceElement.innerText = `$${formatPrice(price)}`;
       });
 
       // 顯示 BNB/USDT 的價格
       const bnbusdtPriceElement = document.getElementById('bnbusdtPrice');
       socket.on('bnbusdtPriceUpdate', function(price) {
-        bnbusdtPriceElement.innerText = `BNB/USDT Latest Price: $${price}`;
+        bnbusdtPriceElement.innerText = `$${formatPrice(price)}`;
       });
 
       // 顯示 DOT/USDT 的價格
       const dotusdtPriceElement = document.getElementById('dotusdtPrice');
       socket.on('dotusdtPriceUpdate', function(price) {
-        dotusdtPriceElement.innerText = `DOT/USDT Latest Price: $${price}`;
+        dotusdtPriceElement.innerText = `$${formatPrice(price)}`;
       });
     </script>
 </body>
