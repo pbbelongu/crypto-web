@@ -6,12 +6,39 @@ body {
   display: flex;
 }
 
-.container {
-  max-width: 800px;
+.menu-area{
+  position: absolute; /* 或者使用 position: absolute; */
+  top:0;
+  bottom:0;
+  left: 0;
+  width: 280px;
   margin: 0 auto;
   padding: 20px;
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.content-area{
+  position: absolute;
+  left:320px;
+  right:364px;
+  top:0;
+  bottom:0;
+  background-color: #53897f66;
+  border-radius: 20px;
+}
+
+.container {
+  position: absolute; /* 或者使用 position: absolute; */
+  top:0;
+  bottom:0;
+  right: 0;
+  max-width: 324px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -26,6 +53,9 @@ h1 {
   margin-top: 20px;
   justify-content: space-between;
   width: 300px; /* 調整單個 price-item 的寬度 */
+  border-radius: 20px;
+  border: 2px solid #000; /* 設置邊框樣式為實線，寬度為2px，顏色為黑色 */
+  padding: 10px;
 }
 .cryptoName {
   flex: 1;

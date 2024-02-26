@@ -7,7 +7,53 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <div class="menu-area">
+        <!-- 在此添加菜单项目 -->
+        <ul>
+            <li><a href="#">功能1</a></li>
+            <li><a href="#">功能2</a></li>
+            <li><a href="#">功能3</a></li>
+        </ul>
+  </div>
+  
+  <div class="content-area">
+      <!-- 在此添加主要内容 -->
+      <h1>功能區域</h1>
+      <p>這裡是主要的功能區域。您可以添加各種內容，例如表格、圖表或表單。</p>
+  </div>
+  
   <div class="container">
+    <nav>
+      <ul>
+        <div id="userActions">
+          <!-- 如果 username 存在，表示用户已登录，显示登出链接 -->
+          <!-- 否则显示登录和注册链接 -->
+          <p id="welcomeMessage"></p>
+          <a id="loginLink" style="display: none;" href="/login">登入</a>
+          <a id="registerLink" style="display: none;" href="/register">註冊</a>
+          <a id="logoutLink" style="display: none;" href="/logout">登出</a>
+        </div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var username = '<%= username %>';
+            var welcomeMessage = document.getElementById('welcomeMessage');
+            var loginLink = document.getElementById('loginLink');
+            var registerLink = document.getElementById('registerLink');
+            var logoutLink = document.getElementById('logoutLink');
+  
+            if (username) {
+              // 用户已登录，显示欢迎消息和登出链接
+              welcomeMessage.textContent = '你已經登錄，歡迎 ' + username + '！';
+              logoutLink.style.display = 'inline';
+            } else {
+              // 用户未登录，显示登录和注册链接
+              loginLink.style.display = 'inline';
+              registerLink.style.display = 'inline';
+            }
+          });
+        </script>
+      </ul>
+    </nav>
     <h1>Binance Price Updates</h1>
     <div class="price-item">
       <img src="/images/btc.png" alt="BTC Icon">
@@ -35,12 +81,6 @@
       <div id="dotusdtPrice"class="price"></div> 
     </div>
   </div>
-  <nav>
-    <ul>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-    </ul>
-  </nav>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();

@@ -1,9 +1,16 @@
 const express = require('express');
+const session = require('express-session');
 const mysql = require('mysql');
 const { WebsocketStream } = require('@binance/connector');
 
 const app = express();
 const PORT = 3000;
+
+app.use(session({
+  secret: 'secret', 
+  resave: true,
+  saveUninitialized: true
+}));
 
 // 解析POST請求的body
 app.use(express.urlencoded({ extended: true }));
@@ -68,8 +75,10 @@ app.post('/login', (req, res) => {
       res.status(500).send('An error occurred while processing login');
     } else {
       if (results.length > 0) {
-        // 如果找到匹配的用戶，則登入成功
-        res.status(200).send('Login successful');
+        // 如果找到匹配的用戶，則登入成功，將用戶導向主頁
+        req.session.loggedIn = true;
+        req.session.username = username;
+        res.redirect('/');
       } else {
         // 如果未找到匹配的用戶，則登入失敗
         res.status(401).send('Invalid username or password');
@@ -78,9 +87,16 @@ app.post('/login', (req, res) => {
   });
 });
 
-// 路由處理
+app.get('/logout', (req, res) => {
+  req.session.username = null; 
+  res.redirect('/');
+});
+
 app.get('/', (req, res) => {
-  res.render('index', { latestPrice: 'Loading...' }); // 初始顯示Loading...
+  const loggedIn = req.session.loggedIn;
+  const username = req.session.username;
+
+  res.render('index', { loggedIn, username });
 });
 
 // 創建WebSocket客戶端
@@ -118,7 +134,8 @@ io.on('connection', (socket) => {
 });
 
 // 關閉WebSocket客戶端
-setTimeout(() => {
+/*setTimeout(() => {
   websocketStreamClient.disconnect();
   server.close();
 }, 60000); //關閉WebSocket客戶端和服務器
+*/
