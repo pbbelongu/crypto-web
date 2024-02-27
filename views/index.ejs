@@ -10,51 +10,143 @@
   <div class="menu-area">
         <!-- 在此添加菜单项目 -->
         <ul>
-            <li><a href="#">功能1</a></li>
-            <li><a href="#">功能2</a></li>
-            <li><a href="#">功能3</a></li>
+          <li><a href="#" onclick="handleFunctionClick(1)">探索</a></li>
+          <li><a href="#" onclick="handleFunctionClick(2)">功能2</a></li>
+          <li><a href="#" onclick="handleFunctionClick(3)">新增貼文</a></li>
         </ul>
+        <script>
+          function handleFunctionClick(functionNumber) {
+            // 檢查使用者是否已登入
+            const username = '<%= username %>';
+            if (username) {
+              // 如果使用者已登入，允許執行功能1、功能2、功能3的操作
+              switch (functionNumber) {
+                case 1:
+                  window.location.href = '/';
+                  break;
+                case 2:
+                  // 執行功能2的操作
+                  break;
+                case 3:
+                  showPostForm();
+                  break;
+                default:
+                  break;
+              }
+            } else {
+              switch (functionNumber) {
+                case 1:
+                  window.location.href = '/';
+                  break;
+                case 2:
+                  alert('請先登入');
+                  break;
+                case 3:
+                  alert('請先登入');
+                  break;
+                default:
+                  break;
+              }
+            }
+          }
+
+          function showPostForm() {
+            const contentArea = document.querySelector('.content-area');
+            contentArea.innerHTML = ''; // 清空原有内容
+
+            const formHTML = `
+              <h2>新增貼文</h2>
+              <form id="postForm" action="/submitPost" method="post">
+                <label for="title">標題:</label><br>
+                <input type="text" id="title" name="title"><br>
+                <label for="content">內容:</label><br>
+                <textarea id="content" name="content"></textarea><br><br>
+                <button type="submit">提交</button>
+              </form>
+            `;
+            contentArea.innerHTML = formHTML;
+          }
+
+        </script>
+        <nav>
+          <ul>
+            <div id="userActions" class="user-item">
+              <!-- 如果 username 存在，表示用户已登录，显示登出链接 -->
+              <!-- 否则显示登录和注册链接 -->
+              <p id="welcomeMessage"></p>
+              <a id="loginLink" style="display: none;" href="/login">登入</a>
+              <a id="registerLink" style="display: none;" href="/register">註冊</a>
+              <a id="logoutLink" style="display: none;" href="/logout">登出</a>
+            </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                var username = '<%= username %>';
+                var welcomeMessage = document.getElementById('welcomeMessage');
+                var loginLink = document.getElementById('loginLink');
+                var registerLink = document.getElementById('registerLink');
+                var logoutLink = document.getElementById('logoutLink');
+      
+                if (username) {
+                  // 用户已登录，显示欢迎消息和登出链接
+                  welcomeMessage.textContent =  username + '！';
+                  logoutLink.style.display = 'inline';
+                } else {
+                  // 用户未登录，显示登录和注册链接
+                  loginLink.style.display = 'inline';
+                  registerLink.style.display = 'inline';
+                }
+              });
+            </script>
+          </ul>
+        </nav>
   </div>
   
   <div class="content-area">
       <!-- 在此添加主要内容 -->
-      <h1>功能區域</h1>
-      <p>這裡是主要的功能區域。您可以添加各種內容，例如表格、圖表或表單。</p>
+      <h1>探索</h1>
+      <div id="posts-container">
+        <!-- 这里将动态加载的帖子显示在这个容器中 -->
+      </div>
   </div>
-  
-  <div class="container">
-    <nav>
-      <ul>
-        <div id="userActions">
-          <!-- 如果 username 存在，表示用户已登录，显示登出链接 -->
-          <!-- 否则显示登录和注册链接 -->
-          <p id="welcomeMessage"></p>
-          <a id="loginLink" style="display: none;" href="/login">登入</a>
-          <a id="registerLink" style="display: none;" href="/register">註冊</a>
-          <a id="logoutLink" style="display: none;" href="/logout">登出</a>
-        </div>
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            var username = '<%= username %>';
-            var welcomeMessage = document.getElementById('welcomeMessage');
-            var loginLink = document.getElementById('loginLink');
-            var registerLink = document.getElementById('registerLink');
-            var logoutLink = document.getElementById('logoutLink');
-  
-            if (username) {
-              // 用户已登录，显示欢迎消息和登出链接
-              welcomeMessage.textContent = '你已經登錄，歡迎 ' + username + '！';
-              logoutLink.style.display = 'inline';
-            } else {
-              // 用户未登录，显示登录和注册链接
-              loginLink.style.display = 'inline';
-              registerLink.style.display = 'inline';
-            }
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPosts(); // 页面加载时加载帖子
+
+      function loadPosts() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/posts', true);
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            var posts = JSON.parse(xhr.responseText);
+            displayPosts(posts);
+          } else {
+            console.error('Failed to load posts');
+          }
+        };
+        xhr.send();
+      }
+
+      function displayPosts(posts) {
+        var postsContainer = document.getElementById('posts-container');
+        if (posts && posts.length > 0) {
+          posts.forEach(function(post) {
+            var postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+              <h2>${post.title}</h2>
+              <p>${post.content}</p>
+              <p>作者: ${post.username}</p>
+            `;
+            postsContainer.appendChild(postElement);
           });
-        </script>
-      </ul>
-    </nav>
-    <h1>Binance Price Updates</h1>
+        } else {
+          postsContainer.innerHTML = '<p>暂无帖子</p>';
+        }
+      }
+    });
+  </script>
+  <div class="container">
+    <h1>Price Updates</h1>
     <div class="price-item">
       <img src="/images/btc.png" alt="BTC Icon">
       <p class="cryptoName">BTC/USDT</p>

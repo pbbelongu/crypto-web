@@ -97,7 +97,58 @@ app.get('/', (req, res) => {
   const username = req.session.username;
 
   res.render('index', { loggedIn, username });
+
+  // 查詢資料庫中的所有文章
+  const sql = 'SELECT * FROM posts';
+  db.query(sql, (err, results) => {
+    if (err) {
+      // 如果查詢出錯，返回錯誤頁面或信息
+      res.status(500).send('An error occurred while retrieving posts');
+    } else {
+      // 如果查詢成功，將文章列表傳遞給模板，呈現在主頁面上
+      res.render('index', { posts: results });
+    }
+  });
 });
+
+// 處理提交文章的 POST 請求
+app.post('/submitPost', (req, res) => {
+  // 檢查用戶是否已登錄
+  if (!req.session.loggedIn || !req.session.username) {
+    return res.status(401).send('請先登錄');
+  }
+
+  // 從表單中提取標題和內容
+  const { title, content } = req.body;
+  const username = req.session.username;
+
+  // 將文章插入到數據庫中
+  const sql = 'INSERT INTO posts (title, content, username) VALUES (?, ?, ?)';
+  db.query(sql, [title, content, username], (err, result) => {
+    if (err) {
+      console.error('發佈文章時發生錯誤：', err);
+      return res.status(500).send('發佈文章時發生錯誤');
+    }
+    console.log('文章已發佈');
+    res.status(200).send('文章已成功發佈');
+  });
+});
+
+// 路由处理获取帖子的请求
+app.get('/posts', (req, res) => {
+  // 查询数据库中的所有帖子
+  const sql = 'SELECT * FROM posts';
+  db.query(sql, (err, results) => {
+    if (err) {
+      // 如果查詢出錯，返回錯誤頁面或信息
+      res.status(500).send('An error occurred while retrieving posts');
+    } else {
+      // 如果查詢成功，將文章列表以 JSON 格式返回给客户端
+      res.json(results);
+    }
+  });
+});
+
 
 // 創建WebSocket客戶端
 const websocketStreamClient = new WebsocketStream({
